@@ -8,6 +8,7 @@ from django.contrib.auth.models import (
 class UserManager(BaseUserManager):
     def create_user(self, email, name, gender, introduction, password=None):
         gender = gender.upper()
+
         if not email:
             raise ValueError('사용자 이메일은 필수 기입 사항입니다.')
 
@@ -32,10 +33,6 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, name, gender, introduction, password=None):
-        """
-        Creates and saves a superuser with the given email, date of
-        birth and password.
-        """
         user = self.create_user(
             email,
             password=password,
@@ -54,7 +51,6 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    # gender choices 참고 문서 : https://code.djangoproject.com/ticket/18062
     GENDER_CHOICES = (
         ('M', '남성'),
         ('F', '여성'),
@@ -65,7 +61,7 @@ class User(AbstractBaseUser):
     )
 
     name = models.CharField(max_length=50, unique=True)
-    introduction = models.TextField()
+    introduction = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
