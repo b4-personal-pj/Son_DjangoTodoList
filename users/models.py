@@ -1,3 +1,94 @@
 from django.db import models
+from django.contrib.auth.models import (
+    BaseUserManager, AbstractBaseUser
+)
 
-# Create your models here.
+
+# ,'name','gender','introduction'
+class UserManager(BaseUserManager):
+    def create_user(self, email, name, gender, introduction, password=None):
+        gender = gender.upper()
+        if not email:
+            raise ValueError('사용자 이메일은 필수 기입 사항입니다.')
+
+        elif not name:
+            raise ValueError('사용자 이름은 필수 기입 사항입니다.')
+
+        elif not gender:
+            raise ValueError('사용자의 성별은 필수 선택 사항입니다.')
+
+        elif gender != 'M' or gender != 'F':
+            raise ValueError('올바른 성별을 입력해주세요 M/F')
+
+        user = self.model(
+            email=self.normalize_email(email),
+            name=name,
+            gender=gender,
+            introduction=introduction,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, name, gender, introduction, password=None):
+        """
+        Creates and saves a superuser with the given email, date of
+        birth and password.
+        """
+        user = self.create_user(
+            email,
+            password=password,
+            name=name,
+            gender=gender,
+            introduction=introduction,
+        )
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
+
+
+class User(AbstractBaseUser):
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+    )
+    # gender choices 참고 문서 : https://code.djangoproject.com/ticket/18062
+    GENDER_CHOICES = (
+        ('M', '남성'),
+        ('F', '여성'),
+    )
+    gender = models.CharField(
+        max_length=10,
+        choices=GENDER_CHOICES
+    )
+
+    name = models.CharField(max_length=50, unique=True)
+    introduction = models.TextField()
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name', 'gender', 'introduction']
+
+    def __str__(self):
+        return self.email
+
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
