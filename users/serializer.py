@@ -34,4 +34,4 @@ class UserSerializer(serializers.ModelSerializer):
 class ReadUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('name','email', 'gender', 'introduction')
+        fields = ('name','email', 'gender', 'introduction','age')

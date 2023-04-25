@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 
 # ,'name','gender','introduction'
 class UserManager(BaseUserManager):
-    def create_user(self, email, name, gender, introduction, password=None):
+    def create_user(self, email, name,age, gender, introduction, password=None):
         gender = gender.upper()
 
         if not email:
@@ -21,24 +21,29 @@ class UserManager(BaseUserManager):
         elif not gender == 'M' or gender == 'F':
             raise ValueError('올바른 성별을 입력해주세요 M/F')
 
+        elif not age:
+            raise ValueError('사용자의 나이를 입력해주세요.')
+
         user = self.model(
             email=self.normalize_email(email),
             name=name,
             gender=gender,
             introduction=introduction,
+            age=age,
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, name, gender, introduction, password=None):
+    def create_superuser(self, email, name, gender, introduction,age, password=None):
         user = self.create_user(
             email,
             password=password,
             name=name,
             gender=gender,
             introduction=introduction,
+            age=age,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -60,6 +65,7 @@ class User(AbstractBaseUser):
         choices=GENDER_CHOICES
     )
 
+    age = models.PositiveIntegerField()
     name = models.CharField(max_length=50, unique=True)
     introduction = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
@@ -68,7 +74,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'gender', 'introduction']
+    REQUIRED_FIELDS = ['name', 'gender', 'introduction','age']
 
     def __str__(self):
         return self.email
