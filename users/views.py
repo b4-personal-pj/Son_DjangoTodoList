@@ -4,9 +4,10 @@ from rest_framework import  status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
-from .serializer import UserSerializer,ReadUserSerializer
+from .serializer import UserSerializer,ReadUserSerializer,ComtomTokenObtainPairSerializer
 from .models import User
 from django.contrib import auth
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 # 회원가입
@@ -70,3 +71,6 @@ class UserView(APIView):
             return Response({"message":"회원 탈퇴 하셨습니다."},status=status.HTTP_200_OK)
         else:
             return Response({"error":"권한이 없습니다."},status=status.HTTP_400_BAD_REQUEST)
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = ComtomTokenObtainPairSerializer

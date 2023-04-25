@@ -5,6 +5,8 @@
 # 4. 회원가입시 비밀번호 복호화 과정 필요
 
 from rest_framework import serializers
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -35,3 +37,14 @@ class ReadUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('name','email', 'gender', 'introduction','age')
+
+class ComtomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['email'] = user.email
+        token['name'] = user.name
+        token['gender'] = user.gender
+        token['age'] = user.age
+
+        return token
