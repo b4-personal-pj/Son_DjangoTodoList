@@ -18,7 +18,7 @@ class UserManager(BaseUserManager):
         elif not gender:
             raise ValueError('사용자의 성별은 필수 선택 사항입니다.')
 
-        elif gender != 'M' or gender != 'F':
+        elif not gender == 'M' or gender == 'F':
             raise ValueError('올바른 성별을 입력해주세요 M/F')
 
         user = self.model(
