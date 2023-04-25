@@ -20,9 +20,13 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(user.password)
         user.save()
         return user
+
+
+
     # 회원 정보 수정, 오버라이딩
     def update(self, instance, validated_data):
-        user = super().create(validated_data)
+        user = super().update(instance,validated_data)
+        # 비밀번호 복호화
         user.set_password(user.password)
         user.save()
         return user
