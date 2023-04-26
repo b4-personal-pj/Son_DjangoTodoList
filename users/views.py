@@ -8,7 +8,8 @@ from .serializer import UserSerializer,ReadUserSerializer,ComtomTokenObtainPairS
 from .models import User
 from django.contrib import auth
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken
 
 # 회원가입
 class SignUp(APIView):
@@ -36,13 +37,8 @@ class UserView(APIView):
     def post(self, request,user_id):
         owner = get_object_or_404(User,id=user_id)
         if request.user == owner:
-            # request.user.auth_token.delete()
-            # 문제점 1. 토큰이 삭제되지 않는다.
-            # AttributeError 해결 방법 : 'rest_framework.authtoken', (install app 추가)
-            # 새로운 문제 직면
-            # RelatedObjectDoesNotExist: User has no auth_token.
-
-            auth.logout(request)
+            token = RefreshToken(request.data.get('refresh'))
+            token.blacklist()
             return Response({"message":"로그아웃 하셨습니다."},status=status.HTTP_200_OK)
         else:
             return Response({"message":"잘못된 접근입니다."},status=status.HTTP_400_BAD_REQUEST)

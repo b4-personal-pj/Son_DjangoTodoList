@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
     'users',
     'todo_list',
 ]
@@ -52,7 +52,7 @@ REST_FRAMEWORK = {
 
 # Pay Load 재정의 : https://django-rest-framework-simplejwt.readthedocs.io/en/latest/customizing_token_claims.html
 SIMPLE_JWT = {
-  "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.MyTokenObtainPairSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.MyTokenObtainPairSerializer",
 }
 
 MIDDLEWARE = [
@@ -139,10 +139,13 @@ AUTH_USER_MODEL = 'users.User'
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=720),
-    # 개발 환경에 맞춰 720, 배포시 시간 단축 필요
+    # ACCESS 토큰의 유효 기간 지정
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
+    # REFRESH 토큰의 유효기간 지정
+    "ROTATE_REFRESH_TOKENS": True,
+    # True로 설정할 경우, refresh token을 보내면 새로운 access token과 refresh token이 반환된다.
+    "BLACKLIST_AFTER_ROTATION": True,
+    # True로 설정될 경우, 기존에 있던 refresh token은 blacklist가된다.
     "UPDATE_LAST_LOGIN": False,
 
     "ALGORITHM": "HS256",
