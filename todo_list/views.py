@@ -54,5 +54,5 @@ class DetailPostView(APIView):
         post.delete()
         return Response({"message":"게시글을 삭제했습니다."},status=status.HTTP_200_OK)
 
-# 커밋 테스트### test 2
+# 커밋 테스트### test 2 ## test3
 
