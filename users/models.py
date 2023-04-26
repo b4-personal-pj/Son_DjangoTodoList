@@ -66,7 +66,7 @@ class User(AbstractBaseUser):
     )
 
     age = models.PositiveIntegerField()
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     introduction = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
