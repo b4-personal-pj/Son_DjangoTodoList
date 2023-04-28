@@ -36,10 +36,11 @@ class DetailPostView(APIView):
         post = get_object_or_404(Post,id=post_id)
         if not request.user == post.owner:
             return Response("권한이 없습니다.",status=status.HTTP_400_BAD_REQUEST)
-
         serializer = CreatePostSerializer(post,data=request.data)
         if serializer.is_valid():
             serializer.save(owner = request.user)
+            post.complete()
+            post.save()
             return Response(serializer.data,status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

@@ -17,7 +17,7 @@ class PostSerializer(serializers.ModelSerializer):
 class CreatePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('title','comment')
+        fields = ('title','comment','is_complete')
 
 class DetailPostSerializer(serializers.ModelSerializer):
     owner = serializers.SerializerMethodField()

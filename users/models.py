@@ -65,9 +65,9 @@ class User(AbstractBaseUser):
         choices=GENDER_CHOICES
     )
 
-    age = models.PositiveIntegerField()
+    age = models.PositiveIntegerField(blank=True)
     name = models.CharField(max_length=50)
-    introduction = models.TextField(blank=True)
+    introduction = models.TextField(blank=True,default="아직 작성된 소개가 없습니다.")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
