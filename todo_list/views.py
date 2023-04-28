@@ -28,6 +28,8 @@ class DetailPostView(APIView):
     # 게시글 상세 조회 (제목,작성자,내용,작성시간,수정시간)
     def get(self,request,post_id):
         post = get_object_or_404(Post,id=post_id)
+        if not request.user == post.owner:
+            return Response({"message":"권한이 없습니다."},status=status.HTTP_400_BAD_REQUEST)
         serializer = DetailPostSerializer(post)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
@@ -35,7 +37,7 @@ class DetailPostView(APIView):
     def put(self,request,post_id):
         post = get_object_or_404(Post,id=post_id)
         if not request.user == post.owner:
-            return Response("권한이 없습니다.",status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message":"권한이 없습니다."},status=status.HTTP_400_BAD_REQUEST)
         serializer = CreatePostSerializer(post,data=request.data)
         if serializer.is_valid():
             serializer.save(owner = request.user)
