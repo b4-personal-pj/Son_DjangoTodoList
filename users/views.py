@@ -9,6 +9,8 @@ from .models import User
 from django.contrib import auth
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.urls import reverse
+from django.shortcuts import redirect
 
 
 # 회원가입
@@ -38,15 +40,16 @@ class UserView(APIView):
     # 나의 생각 정리 : https://velog.io/@rumor/DRF-Simple-JWT-%EB%B8%94%EB%9E%99%EB%A6%AC%EC%8A%A4%ED%8A%B8
     # 요약 : token 인증 방식의 장점인 stateless가 무뎌질 수 있을 것 같다.
     #       블랙리스트 기능은, 관리자가 특정한 token을 차단하는것이 더 바람직 하지 않을까?
-    def post(self, request,user_id):
-        owner = get_object_or_404(User,id=user_id)
-        if request.user == owner:
-            token = RefreshToken(request.data.get('refresh'))
-            print(token)
-            token.blacklist()
-            return Response({"message":"로그아웃 하셨습니다."},status=status.HTTP_200_OK)
-        else:
-            return Response({"message":"잘못된 접근입니다."},status=status.HTTP_400_BAD_REQUEST)
+    # def post(self, request,user_id):
+    #     owner = get_object_or_404(User,id=user_id)
+    #     if request.user == owner:
+    #         token = RefreshToken(request.data.get('refresh'))
+    #         print(token)
+    #         token.blacklist()
+    #         return Response({"message":"로그아웃 하셨습니다."},status=status.HTTP_200_OK)
+    #         # return redirect(reverse('token_blacklist'))
+    #     else:
+    #         return Response({"message":"잘못된 접근입니다."},status=status.HTTP_400_BAD_REQUEST)
 
     # 회원 정보 수정
     def put(self,request,user_id):
