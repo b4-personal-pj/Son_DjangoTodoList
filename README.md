@@ -2,7 +2,7 @@
 스파르타 장고 프로젝트 Todo List과제입니다.
 
 # 프레임 워크
-* Django Rest Framew Work
+* Django Rest Frame Work
 
 <br>
 
@@ -28,4 +28,4 @@
 <br>
 
 # ERD 설계
-![img_2.png](img_2.png)
+![image](https://user-images.githubusercontent.com/127279354/235381758-aa43e334-8257-4c80-bf8d-9fdfd38c93b6.png)
